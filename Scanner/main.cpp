@@ -2,6 +2,8 @@
 using namespace std;
 int main(void)
 {
+	ofstream output_file;
+	output_file.open("out.txt");
 	while (1)
 	{
 		string input = "", output, temp, file_name;
@@ -13,7 +15,9 @@ int main(void)
 		while (input_file) {
 			// Read a Line from standard input 
 			getline(input_file, temp);
+			//if (temp == "\0")break;
 			input += temp;
+			temp = "";
 		}
 		cout << input;
 		cout << endl;
@@ -21,15 +25,20 @@ int main(void)
 		input_file.close();
 
 
-
-		int tokens_number = 0;
+		bool flag_continue = false;
+		int tokens_number = 0,counter=0;
 		vector <token_record> tokens;
 		char character;
 		state current_state = START;
 		state next_state;
 		//getline(cin, input);
-		for (int i = 0; i < input.length(); i++)
-		{
+		for ( int i = 0; i < input.length(); i++)
+		{	
+			counter++;
+			if (flag_continue)
+			{
+				break;
+			}
 			switch (current_state)
 			{
 			case START:
@@ -63,7 +72,13 @@ int main(void)
 					}
 					else
 					{
-						if (!(input[i + 1] >= '0' && input[i + 1] <= '9'))
+						if ((input[i + 1] >= 'A' && input[i + 1] <= 'Z') || (input[i + 1] >= 'a' && input[i + 1] <= 'z'))
+						{
+							next_state = DONE;
+							flag_continue = true;
+							continue;
+						}
+						else if (!(input[i + 1] >= '0' && input[i + 1] <= '9'))
 						{
 							next_state = DONE;
 							token_record token;
@@ -99,6 +114,10 @@ int main(void)
 							output == "read" ||
 							output == "write")
 						{
+							for (int i = 0; i < output.length(); i++)
+							{
+								output[i] = toupper(output[i]);
+							}
 							token.token_type = output;
 						}
 						else
@@ -111,7 +130,13 @@ int main(void)
 					}
 					else
 					{
-						if (!((input[i + 1] >= 'A' && input[i + 1] <= 'Z') || (input[i + 1] >= 'a' && input[i + 1] <= 'z')))
+						if ((input[i + 1] >= '0' && input[i + 1] <= '9'))
+						{
+							next_state = DONE;
+							flag_continue = true;
+							continue;
+						}
+						else if (!((input[i + 1] >= 'A' && input[i + 1] <= 'Z') || (input[i + 1] >= 'a' && input[i + 1] <= 'z')))
 						{
 							token_record token;
 							token.token_name = output;
@@ -126,6 +151,10 @@ int main(void)
 								output == "read" ||
 								output == "write")
 							{
+								for (int i=0;i<output.length();i++)
+								{
+									output[i] = toupper(output[i]);
+								}
 								token.token_type = output;
 							}
 							else
@@ -322,6 +351,8 @@ int main(void)
 				else
 				{
 					next_state = DONE;
+					flag_continue = true;
+					continue;
 					output = "";
 				}
 				break;
@@ -343,7 +374,13 @@ int main(void)
 					}
 					else
 					{
-						if (!(input[i + 1] >= '0' && input[i + 1] <= '9'))
+						if ((input[i+1] >= 'A' && input[i+1] <= 'Z') || (input[i+1] >= 'a' && input[i+1] <= 'z'))
+						{
+							next_state = DONE;
+							flag_continue = true;
+							continue;
+						}
+						else if (!(input[i + 1] >= '0' && input[i + 1] <= '9'))
 						{
 							next_state = DONE;
 							token_record token;
@@ -392,6 +429,10 @@ int main(void)
 							output == "read" ||
 							output == "write")
 						{
+							for (int i = 0; i < output.length(); i++)
+							{
+								output[i] = toupper(output[i]);
+							}
 							token.token_type = output;
 						}
 						else
@@ -405,7 +446,13 @@ int main(void)
 					}
 					else
 					{
-						if (!((input[i + 1] >= 'A' && input[i + 1] <= 'Z') || (input[i + 1] >= 'a' && input[i + 1] <= 'z')))
+						if ((input[i + 1] >= '0' && input[i + 1] <= '9'))
+						{
+							next_state = DONE;
+							flag_continue = true;
+							continue;
+						}
+						else if (!((input[i + 1] >= 'A' && input[i + 1] <= 'Z') || (input[i + 1] >= 'a' && input[i + 1] <= 'z')))
 						{
 							token_record token;
 							token.token_name = output;
@@ -420,6 +467,10 @@ int main(void)
 								output == "read" ||
 								output == "write")
 							{
+								for (int i = 0; i < output.length(); i++)
+								{
+									output[i] = toupper(output[i]);
+								}
 								token.token_type = output;
 							}
 							else
@@ -455,6 +506,10 @@ int main(void)
 						output == "read" ||
 						output == "write")
 					{
+						for (int i = 0; i < output.length(); i++)
+						{
+							output[i] = toupper(output[i]);
+						}
 						token.token_type = output;
 					}
 					else
@@ -481,7 +536,10 @@ int main(void)
 
 			current_state = next_state;
 		}
-
+		if (flag_continue&& counter < input.length())
+		{
+			continue;
+		}
 
 
 
@@ -490,13 +548,17 @@ int main(void)
 			if (tokens[i].is_num)
 			{
 				cout << tokens[i].token_value << ", " << tokens[i].token_type << endl;
+				output_file<< tokens[i].token_value << ", " << tokens[i].token_type << endl;
 			}
 			else
 			{
-				cout << tokens[i].token_name << ", " << tokens[i].token_type << endl;
+				cout <<tokens[i].token_name << ", " << tokens[i].token_type << endl;
+				output_file << tokens[i].token_name << ", " << tokens[i].token_type << endl;
+				//output_file << "aaaaaaaaaaaaaaaaaaa" << endl;
 			}
 
 		}
 	}
+	output_file.close();
 	return 0;
 }
