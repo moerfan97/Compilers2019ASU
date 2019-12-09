@@ -4,6 +4,7 @@ int main(void)
 {
 	ofstream output_file;
 	output_file.open("out.txt");
+	int flag_comment=0;
 	while (1)
 	{
 		string input = "", output, temp, file_name;
@@ -50,6 +51,7 @@ int main(void)
 				{
 					next_state = INCOMMENT;
 					output.push_back(input[i]);
+					flag_comment=1;
 				}
 				else if (input[i] == ':')
 				{
@@ -329,6 +331,7 @@ int main(void)
 				if (input[i] == '}')
 				{
 					next_state = START;
+					flag_comment=0;
 				}
 				else
 				{
@@ -538,6 +541,28 @@ int main(void)
 		}
 		if (flag_continue&& counter < input.length())
 		{
+			/////////
+		for (int i = 0; i < tokens.size(); i++)
+		{
+			if (tokens[i].is_num)
+			{
+				cout << tokens[i].token_value << ", " << tokens[i].token_type << endl;
+				output_file<< tokens[i].token_value << ", " << tokens[i].token_type << endl;
+			}
+			else
+			{
+				cout <<tokens[i].token_name << ", " << tokens[i].token_type << endl;
+				output_file << tokens[i].token_name << ", " << tokens[i].token_type << endl;
+				//output_file << "aaaaaaaaaaaaaaaaaaa" << endl;
+			}
+
+		}
+		output_file<<"Error !!!!!!"<<endl;
+	if(flag_comment==1) 
+	{
+		output_file<<"Comment ERROR!!!!!"<<endl;
+	}
+			////////////
 			continue;
 		}
 
@@ -558,7 +583,12 @@ int main(void)
 			}
 
 		}
+			if(flag_comment==1) 
+	{
+		output_file<<"Comment ERROR!!!!!"<<endl;
 	}
+	}
+
 	output_file.close();
 	return 0;
 }

@@ -1,9 +1,6 @@
 read, READ
 x, Identifier
 ;, separator
-read, READ
-x, Identifier
-;, separator
 if, IF
 0, number
 <, LT
