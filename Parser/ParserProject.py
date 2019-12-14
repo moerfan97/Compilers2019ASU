@@ -61,6 +61,7 @@ def program (level,id):
     stmt_sequence(level,id)
     modify_childrens()
     set_cord()
+    modify_sibling()
     print("Correct Program ^_^ ")
     return
 
@@ -292,6 +293,15 @@ def modify_childrens():
 
     return
 
+def modify_sibling():
+    m = len(Nodes)
+    for i in range(m):
+        if Nodes[i].childrens_no > 0 :
+            if Nodes[i].childrens[-1].level == Nodes[i].level :
+                Nodes[i].IsSibling = True
+
+    return
+
 class Node :
     def __init__(self, kind, text, level , parent_id , shape ,childrens_no = 0):
         global global_id,flag
@@ -303,6 +313,7 @@ class Node :
         self.shape = shape
         self.xCord = -1
         self.yCord = -1
+        self.IsSibling = False
         self.childrens_no = childrens_no
         self.childrens = []
         if flag == 1 :
@@ -363,6 +374,7 @@ for i in range(nodesNo):
     print("ID :",Nodes[i].ID,"\t","Parent: " ,Nodes[i].parent_id,"\t","kind: " ,Nodes[i].kind,"(",Nodes[i].tag,")","level: ",Nodes[i].level,"Shape: ",Nodes[i].shape,"\t","childrens_no: " ,Nodes[i].childrens_no)
     for j in range(Nodes[i].childrens_no):
         print(Nodes[i].childrens[j].ID,"  ")
+        print(Nodes[i].IsSibling)
 
 # Print Coordinates
 for i in range(nodesNo):
